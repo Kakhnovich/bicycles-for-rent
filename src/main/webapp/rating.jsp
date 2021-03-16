@@ -7,9 +7,6 @@
 </c:if>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
-<c:if test="${user==null}">
-    <jsp:forward page="main.jsp"/>
-</c:if>
 <html>
 <head>
     <title><fmt:message key="rating.title"/></title>
@@ -26,7 +23,7 @@
 <h2><fmt:message key="rating.msg.byOrders"/></h2>
 <table border="1" width="400">
     <tr bgcolor="00FF7F">
-        <th><b><fmt:message key="login.title"/></b></th>
+        <th><b><fmt:message key="rating.login"/></b></th>
         <th><b><fmt:message key="rating.ordersCount"/></b></th>
     </tr>
     <c:forEach items="${rating}" var="entry1">
@@ -40,7 +37,7 @@
 <h2><fmt:message key="rating.msg.byHours"/></h2>
 <table border="1" width="400">
     <tr bgcolor="00FF7F">
-        <th><b><fmt:message key="login.title"/></b></th>
+        <th><b><fmt:message key="rating.login"/></b></th>
         <th><b><fmt:message key="rating.hoursCount"/></b></th>
     </tr>
     <c:forEach items="${hoursRating}" var="entry2">

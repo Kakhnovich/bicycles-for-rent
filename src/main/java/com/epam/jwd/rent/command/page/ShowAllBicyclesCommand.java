@@ -37,7 +37,6 @@ public enum ShowAllBicyclesCommand implements Command {
     public ResponseContext execute(RequestContext request) {
         final List<BicycleDto> bicycles = bicycleService.findAll().orElse(Collections.emptyList());
         request.setAttribute(BICYCLES_ATTRIBUTE_NAME, bicycles);
-        setCurrentContextAttribute(request, BICYCLES_PAGE_RESPONSE);
         return BICYCLES_PAGE_RESPONSE;
     }
 }

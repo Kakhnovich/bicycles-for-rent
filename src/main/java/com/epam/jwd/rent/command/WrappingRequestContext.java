@@ -56,6 +56,11 @@ public class WrappingRequestContext implements RequestContext {
         request.getSession().removeAttribute(name);
     }
 
+    @Override
+    public String getHeader(String referer) {
+        return request.getHeader(referer);
+    }
+
     public static RequestContext of(HttpServletRequest request) {
         return new WrappingRequestContext(request);
     }

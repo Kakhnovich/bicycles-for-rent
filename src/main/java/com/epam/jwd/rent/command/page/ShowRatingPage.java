@@ -21,7 +21,6 @@ public enum ShowRatingPage implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        setCurrentContextAttribute(request, RATING_PAGE_RESPONSE);
         return RATING_PAGE_RESPONSE;
     }
 }

@@ -16,7 +16,6 @@ import java.io.IOException;
 public class ApplicationController extends HttpServlet {
 
     private static final String COMMAND_PARAMETER_NAME = "command";
-    private static final String LOGIN_COMMAND_NAME = "LOGIN";
     private static final String DEFAULT_COMMAND_NAME = "DEFAULT";
 
     @Override
@@ -36,10 +35,8 @@ public class ApplicationController extends HttpServlet {
         }
         final Command businessCommand = Command.of(commandName);
         final ResponseContext result = businessCommand.execute(WrappingRequestContext.of(req));
-        if (result.isRedirect()){
+        if (result.isRedirect() || "CHANGE_LOCALE".equalsIgnoreCase(commandName)){
             resp.sendRedirect(result.getPage());
-        } else if ("CHANGE_LOCALE".equalsIgnoreCase(commandName)) {
-            resp.sendRedirect(req.getHeader("Referer"));
         } else {
             final RequestDispatcher dispatcher = req.getRequestDispatcher(result.getPage());
             dispatcher.forward(req, resp);

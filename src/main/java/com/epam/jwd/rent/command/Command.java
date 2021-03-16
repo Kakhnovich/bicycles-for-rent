@@ -7,9 +7,4 @@ public interface Command {
     static Command of(String name) {
         return CommandManager.of(name);
     }
-
-    default void setCurrentContextAttribute(RequestContext request, ResponseContext context){
-        request.removeSessionAttribute("context");
-        request.setSessionAttribute("context", context);
-    }
 }

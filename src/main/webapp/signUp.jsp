@@ -11,9 +11,6 @@
     <title><fmt:message key="signUp.title"/></title>
 </head>
 <body>
-<c:if test="${user!=null}">
-    <jsp:forward page="main.jsp"/>
-</c:if>
 <form action="${pageContext.request.contextPath}/controller?command=change_locale" method="post">
     <fmt:message key="global.locale"/>: <select name="locale">
     <option value="en"><fmt:message key="global.en"/></option>

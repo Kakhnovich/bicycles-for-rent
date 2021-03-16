@@ -21,7 +21,6 @@ public enum ShowOrdersCreationPage implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        setCurrentContextAttribute(request, CREATE_ORDER_RESPONSE);
         return CREATE_ORDER_RESPONSE;
     }
 }

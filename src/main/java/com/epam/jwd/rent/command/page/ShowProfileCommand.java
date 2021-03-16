@@ -40,7 +40,6 @@ public enum ShowProfileCommand implements Command {
         user.ifPresent(userDto -> request.setAttribute("user", userDto));
         Optional<List<OrderDto>> orders = orderService.findAllOrdersByUserName(((UserDto) request.getSessionAttribute("user")).getLogin());
         orders.ifPresent(orderDto -> request.setAttribute("orders", orderDto));
-        setCurrentContextAttribute(request, PROFILE_PAGE_RESPONSE);
         return PROFILE_PAGE_RESPONSE;
         //todo remove hard code attributes names in all classes
     }

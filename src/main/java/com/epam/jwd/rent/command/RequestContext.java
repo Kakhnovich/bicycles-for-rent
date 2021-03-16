@@ -20,4 +20,5 @@ public interface RequestContext {
 
     Object getSessionAttribute(String name);
 
+    String getHeader(String referer);
 }

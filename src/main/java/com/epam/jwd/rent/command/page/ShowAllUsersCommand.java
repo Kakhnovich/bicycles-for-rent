@@ -33,7 +33,6 @@ public enum ShowAllUsersCommand implements Command {
                 .filter(user -> user.getRoleId() == 2)
                 .filter(user -> !user.isBanned())
                 .collect(Collectors.toList())));
-        setCurrentContextAttribute(request, USERS_PAGE_RESPONSE);
         return USERS_PAGE_RESPONSE;
     }
 }

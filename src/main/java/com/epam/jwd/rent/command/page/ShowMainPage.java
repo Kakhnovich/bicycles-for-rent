@@ -21,7 +21,6 @@ public enum ShowMainPage implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        setCurrentContextAttribute(request, MAIN_PAGE_RESPONSE);
         return MAIN_PAGE_RESPONSE;
     }
 }

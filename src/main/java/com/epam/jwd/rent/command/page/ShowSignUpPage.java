@@ -21,7 +21,6 @@ public enum ShowSignUpPage implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        setCurrentContextAttribute(request, SIGN_UP_PAGE_RESPONSE);
         return SIGN_UP_PAGE_RESPONSE;
     }
 }

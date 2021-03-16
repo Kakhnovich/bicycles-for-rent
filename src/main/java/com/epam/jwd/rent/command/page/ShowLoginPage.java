@@ -21,7 +21,6 @@ public enum ShowLoginPage implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        setCurrentContextAttribute(request, LOGIN_PAGE_RESPONSE);
         return LOGIN_PAGE_RESPONSE;
     }
 }

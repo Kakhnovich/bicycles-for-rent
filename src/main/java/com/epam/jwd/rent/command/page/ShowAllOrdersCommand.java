@@ -49,7 +49,6 @@ public enum ShowAllOrdersCommand implements Command {
                     .collect(Collectors.toList());
             request.setAttribute("ordersInProcess", orders);
         }
-        setCurrentContextAttribute(request, ALL_ORDERS_PAGE_RESPONSE);
         return ALL_ORDERS_PAGE_RESPONSE;
     }
 }

@@ -1,7 +1,7 @@
 package com.epam.jwd.rent.command;
 
 import com.epam.jwd.rent.command.bicycle.ChangeBicyclesCountCommand;
-import com.epam.jwd.rent.command.locale.ChangeLocaleCommand;
+import com.epam.jwd.rent.command.page.ChangeLocaleCommand;
 import com.epam.jwd.rent.command.order.ChangeOrderStatusCommand;
 import com.epam.jwd.rent.command.order.NewOrderCommand;
 import com.epam.jwd.rent.command.page.ShowAllBicyclesCommand;

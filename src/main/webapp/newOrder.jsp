@@ -6,9 +6,6 @@
 </c:if>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
-<c:if test="${user.role!='user'}">
-    <jsp:forward page="main.jsp"/>
-</c:if>
 <html>
 <head>
     <title><fmt:message key="newOrder.title"/></title>
