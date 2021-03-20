@@ -20,7 +20,7 @@ public enum ChangeOrderStatusCommand implements Command {
     @Override
     public ResponseContext execute(RequestContext request) {
         if (!String.valueOf(request.getParameter("selectedOrder")).equals("Please Select")) {
-            String status = (request.getParameter("chkBox")) != null ? acceptedStatus : canceledStatus;
+            String status = String.valueOf(request.getParameter("option")).equals("accept") ? acceptedStatus : canceledStatus;
             int id = Integer.parseInt((String.valueOf(request.getParameter("selectedOrder"))));
             orderService.changeStatus(id, status);
         }

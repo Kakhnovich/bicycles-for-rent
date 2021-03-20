@@ -19,39 +19,17 @@
 </select>
     <input type="submit" value="<fmt:message key="global.submit"/>">
 </form>
-<ul>
-    <c:choose>
-        <c:when test="${user.login==null}">
-            <h2><fmt:message key="mainPage.hello1"/></h2>
-            <h2><fmt:message key="mainPage.hello2"/></h2>
-            <li><a href=${pageContext.request.contextPath}/controller?command=login><fmt:message
-                    key="mainPage.toLogin"/></a></li>
-            <li><a href=${pageContext.request.contextPath}/controller?command=sign_up><fmt:message
-                    key="mainPage.toRegistration"/></a></li>
-        </c:when>
-        <c:otherwise>
-            <li><a href=${pageContext.request.contextPath}/controller?command=logout><fmt:message
-                    key="mainPage.toLogout"/></a></li>
-            <li><a href=${pageContext.request.contextPath}/controller?command=rating><fmt:message
-                    key="mainPage.toUsersRating"/></a></li>
-            <li><a href="${pageContext.request.contextPath}/controller?command=show_bicycles"><fmt:message
-                    key="mainPage.toBicycles"/></a></li>
-            <c:choose>
-                <c:when test="${user.role=='user'}">
-                    <li><a href=${pageContext.request.contextPath}/controller?command=profile><fmt:message
-                            key="mainPage.toProfile"/></a></li>
-                    <li><a href=${pageContext.request.contextPath}/controller?command=new_order><fmt:message
-                            key="mainPage.newOrder"/></a></li>
-                </c:when>
-                <c:otherwise>
-                    <li><a href=${pageContext.request.contextPath}/controller?command=users><fmt:message
-                            key="mainPage.toUsers"/></a></li>
-                    <li><a href=${pageContext.request.contextPath}/controller?command=orders><fmt:message
-                            key="mainPage.toOrders"/></a></li>
-                </c:otherwise>
-            </c:choose>
-        </c:otherwise>
-    </c:choose>
-</ul>
+<h2><fmt:message key="mainPage.hello1"/></h2>
+<h4>Our places:</h4>
+<c:forEach var="place" items="${requestScope.places}">
+    <form action="${pageContext.request.contextPath}/controller?command=order_page&place=${place}" method="post">
+        <h5>${place}</h5>
+        <h5>Chose date - <input name="date" type="date" value=""></h5>
+<%--        todo check--%>
+        <input type="submit" value="see available bicycles">
+    </form>
+    <br>
+</c:forEach>
+<jsp:include page="/commands.jsp" />
 </body>
 </html>

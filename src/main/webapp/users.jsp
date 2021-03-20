@@ -6,6 +6,7 @@
 </c:if>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
+<c:set var="cmnd" value="users" scope="request"/>
 <html>
 <head>
     <title><fmt:message key="users.title"/></title>
@@ -21,11 +22,12 @@
 </form>
 <table border="1" width="600">
     <tr bgcolor="00FF7F">
-        <th><b><fmt:message key="global.id"/></b></th>
-        <th><b><fmt:message key="profile.role"/></b></th>
-        <th><b><fmt:message key="login.title"/></b></th>
-        <th><b><fmt:message key="profile.balance"/></b></th>
-        <th><b><fmt:message key="users.banned"/></b></th>
+        <th><b><a href=${pageContext.request.contextPath}/controller?command=users><fmt:message key="global.id"/></a></b></th>
+        <th><b><a href=${pageContext.request.contextPath}/controller?command=users&column=status_id><fmt:message key="profile.role"/></a></b></th>
+        <th><b><a href=${pageContext.request.contextPath}/controller?command=users&column=login><fmt:message key="login.title"/></a></b></th>
+        <th><b><a href=${pageContext.request.contextPath}/controller?command=users&column=balance><fmt:message key="profile.balance"/></a></b></th>
+        <th><b><a href=${pageContext.request.contextPath}/controller?command=users&column=banned><fmt:message key="users.banned"/></a></b></th>
+        <th><b>promote to admin</b></th>
     </tr>
     <c:forEach var="user" items="${requestScope.allUsers}">
         <tr>
@@ -40,29 +42,36 @@
             </c:choose>
             <td>${user.login}</td>
             <td>${user.balance}</td>
-            <td>${user.banned}</td>
+            <td><c:choose>
+                <c:when test="${!user.banned}">
+                    <form action="${pageContext.request.contextPath}/controller?command=change_user_information&selectedUser=${user.login}&option=ban"
+                          method="post">
+                        <input type="submit" value="ban">
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    ${user.banned}
+                </c:otherwise>
+            </c:choose>
+            </td>
+            <td>
+                <c:if test="${!user.banned && user.roleId==2}">
+                    <form action="${pageContext.request.contextPath}/controller?command=change_user_information&selectedUser=${user.login}&option=promote"
+                          method="post">
+                        <input type="submit" value="promote">
+                    </form>
+                </c:if>
+            </td>
         </tr>
     </c:forEach>
 </table>
-<br>
-<br>
-<h3><fmt:message key="users.operation"/>:</h3>
-<form action="${pageContext.request.contextPath}/controller?command=change_user_information" method="post">
-    <fmt:message key="users.user"/>: <select name="selectedUser">
-    <jsp:useBean id="users" scope="request" type="java.util.List"/>
-    <option selected="selected">Please Select</option>
-    <c:forEach items="${users}" var="users">
-        <option value="${users.login}">${users.login}</option>
-    </c:forEach></select>
-    <fmt:message key="users.option"/>: <select name="selectedOption">
-    <option value="ban"><fmt:message key="users.operation.ban"/></option>
-    <option value="promote"><fmt:message key="users.operation.promote"/></option>
-</select>
-    <input type="submit" value="<fmt:message key="global.submit"/>">
-</form>
+<jsp:include page="/pagination.jsp"/>
 <br>
 <br>
 <br>
-<a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a>
+<ul>
+    <li><a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a></li>
+</ul>
+<jsp:include page="/commands.jsp"/>
 </body>
 </html>

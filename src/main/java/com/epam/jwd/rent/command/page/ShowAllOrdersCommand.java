@@ -34,7 +34,16 @@ public enum ShowAllOrdersCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        Optional<List<Order>> allOrders = orderDao.findAll();
+        String page = String.valueOf(request.getParameter("page"));
+        final int pageNumber = (page.equals("null")) ? 1 : Integer.parseInt(page);
+        request.setAttribute("page", pageNumber);
+        request.setAttribute("count", orderDao.getCountOfPages(3));
+        String column = String.valueOf(request.getParameter("column"));
+        if(column.equals("null")){
+            column = "id";
+        }
+        request.setAttribute("column", column);
+        Optional<List<Order>> allOrders = orderDao.findByPageNumber(column, pageNumber);
         if(allOrders.isPresent()) {
             if (String.valueOf(request.getParameter("byValue")).equals("date")) {
                 allOrders.get().sort(Comparator.comparing(Order::getDate));
@@ -44,10 +53,6 @@ public enum ShowAllOrdersCommand implements Command {
                 allOrders.get().sort(Comparator.comparing(Order::getStatus));
             }
             request.setAttribute("orders", allOrders.get());
-            List<Order> orders = allOrders.get().stream()
-                    .filter(order -> order.getStatus().equals("in processing"))
-                    .collect(Collectors.toList());
-            request.setAttribute("ordersInProcess", orders);
         }
         return ALL_ORDERS_PAGE_RESPONSE;
     }

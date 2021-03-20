@@ -6,6 +6,7 @@
 </c:if>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
+<c:set var="cmnd" value="show_bicycles" scope="request"/>
 <html>
 <head>
     <title><fmt:message key="bicycles.title"/></title>
@@ -23,10 +24,10 @@
 <c:if test="${not empty requestScope.bicycles}">
     <table border="1" width="600">
         <tr bgcolor="00FF7F">
-            <th><b><fmt:message key="bicycles.model"/></b></th>
-            <th><b><fmt:message key="bicycles.price"/></b></th>
-            <th><b><fmt:message key="bicycles.place"/></b></th>
-            <th><b><fmt:message key="bicycles.count"/></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=show_bicycles&column=model><fmt:message key="bicycles.model"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=show_bicycles&column=price><fmt:message key="bicycles.price"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=show_bicycles&column=address><fmt:message key="bicycles.place"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=show_bicycles&column=count><fmt:message key="bicycles.count"/></a></b></th>
         </tr>
         <c:forEach var="bicycle" items="${requestScope.bicycles}">
             <tr>
@@ -37,26 +38,28 @@
             </tr>
         </c:forEach>
     </table>
-</c:if>
-<c:if test="${user.role!='user'}">
-    <br>
-    <br>
-    <h3><fmt:message key="bicycles.operation"/></h3>
-    <form action="${pageContext.request.contextPath}/controller?command=change_bicycles_count" method="post">
-        <select name="selectedOption">
-            <option value="add"><fmt:message key="bicycles.operation.add"/></option>
-            <option value="remove"><fmt:message key="bicycles.operation.remove"/></option>
-        </select>
-        <input type="text" placeholder="<fmt:message key="bicycles.model"/>" name="model">
-        <input type="text" placeholder="<fmt:message key="bicycles.place"/>" name="place">
-        <input type="number" placeholder="<fmt:message key="bicycles.price"/>" name="price" step="0.01" min="0">
-        <input type="number" placeholder="<fmt:message key="bicycles.count"/>" name="count" min="1">
-        <input type="submit" value="<fmt:message key="global.submit"/>">
-    </form>
+    <jsp:include page="/pagination.jsp"/>
 </c:if>
 <br>
 <br>
+<h3><fmt:message key="bicycles.operation"/></h3>
+<form action="${pageContext.request.contextPath}/controller?command=change_bicycles_count" method="post">
+    <select name="selectedOption">
+        <option value="add"><fmt:message key="bicycles.operation.add"/></option>
+        <option value="remove"><fmt:message key="bicycles.operation.remove"/></option>
+    </select>
+    <input type="text" placeholder="<fmt:message key="bicycles.model"/>" name="model">
+    <input type="text" placeholder="<fmt:message key="bicycles.place"/>" name="place">
+    <input type="number" placeholder="<fmt:message key="bicycles.price"/>" name="price" step="0.01" min="0">
+    <input type="number" placeholder="<fmt:message key="bicycles.count"/>" name="count" min="1">
+    <input type="submit" value="<fmt:message key="global.submit"/>">
+</form>
 <br>
-<a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a>
+<br>
+<br>
+<ul>
+    <li><a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a></li>
+</ul>
+<jsp:include page="/commands.jsp"/>
 </body>
 </html>

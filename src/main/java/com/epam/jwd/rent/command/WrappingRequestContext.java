@@ -1,5 +1,6 @@
 package com.epam.jwd.rent.command;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -59,6 +60,16 @@ public class WrappingRequestContext implements RequestContext {
     @Override
     public String getHeader(String referer) {
         return request.getHeader(referer);
+    }
+
+    @Override
+    public String getCookieValue(String name) {
+        for(Cookie cookie : request.getCookies()){
+            if (cookie.getName().equals(name)){
+                return cookie.getValue();
+            }
+        }
+        return "";
     }
 
     public static RequestContext of(HttpServletRequest request) {

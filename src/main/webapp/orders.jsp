@@ -6,6 +6,7 @@
 </c:if>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
+<c:set var="cmnd" value="orders" scope="request"/>
 <html>
 <head>
     <title><fmt:message key="orders.title"/></title>
@@ -22,12 +23,18 @@
 <c:if test="${not empty requestScope.orders}">
     <table border="1" width="800">
         <tr bgcolor="00FF7F">
-            <th><b><fmt:message key="global.id"/></b></th>
-            <th><b><fmt:message key="orders.userId"/></b></th>
-            <th><b><fmt:message key="orders.bicycleId"/></b></th>
-            <th><b><fmt:message key="orders.hours"/></b></th>
-            <th><b><fmt:message key="orders.status"/></b></th>
-            <th><b><fmt:message key="orders.date"/></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=orders><fmt:message
+                    key="global.id"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=orders&column=person_id><fmt:message
+                    key="orders.userId"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=orders&column=bicycle_id><fmt:message
+                    key="orders.bicycleId"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=orders&column=hours><fmt:message
+                    key="orders.hours"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=orders&column=status><fmt:message
+                    key="orders.status"/></a></b></th>
+            <th><b><a href=${pageContext.request.contextPath}/controller?command=orders&column=date><fmt:message
+                    key="orders.date"/></a></b></th>
         </tr>
         <c:forEach var="order" items="${requestScope.orders}">
             <tr>
@@ -35,38 +42,35 @@
                 <td>${order.user_id}</td>
                 <td>${order.bicycle_id}</td>
                 <td>${order.hours}</td>
-                <td>${order.status}</td>
+                <td>
+                    <c:choose>
+                        <c:when test="${order.status=='in processing'}">
+                            <form action="${pageContext.request.contextPath}/controller?command=change_order_status&selectedOrder=${order.id}&option=accept"
+                                  method="post">
+                                <input type="submit" value="accept">
+                            </form>
+                            <form action="${pageContext.request.contextPath}/controller?command=change_order_status&selectedOrder=${order.id}&option=cancel"
+                                  method="post">
+                                <input type="submit" value="cancel">
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            ${order.status}
+                        </c:otherwise>
+                    </c:choose>
+                </td>
                 <td>${order.date}</td>
             </tr>
         </c:forEach>
     </table>
-    <br>
-    <h4><a href=${pageContext.request.contextPath}/controller?command=orders><fmt:message
-            key="orders.operation.all"/></a></h4>
-    <h4><a href=${pageContext.request.contextPath}/controller?command=orders&byValue=user><fmt:message
-            key="orders.operation.byUsers"/></a></h4>
-    <h4><a href=${pageContext.request.contextPath}/controller?command=orders&byValue=date><fmt:message
-            key="orders.operation.byDate"/></a></h4>
-    <h4><a href=${pageContext.request.contextPath}/controller?command=orders&byValue=status><fmt:message
-            key="orders.operation.byStatus"/></a></h4>
-    <br>
-    <br>
-    <h3><fmt:message key="orders.operation"/></h3>
-    <form action="${pageContext.request.contextPath}/controller?command=change_order_status" method="post">
-        <fmt:message key="orders.order"/>: <select name="selectedOrder">
-        <jsp:useBean id="ordersInProcess" scope="request" type="java.util.List"/>
-        <option selected="selected">Please Select</option>
-        <c:forEach items="${ordersInProcess}" var="orderInProcess">
-            <option value="${orderInProcess.id}">${orderInProcess.id}</option>
-        </c:forEach>
-    </select>
-        <fmt:message key="orders.operation.accept"/>: <input type="checkbox" name="chkBox">
-        <input type="submit" value="<fmt:message key="global.submit"/>">
-    </form>
+    <jsp:include page="/pagination.jsp"/>
 </c:if>
 <br>
 <br>
 <br>
-<a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a>
+<ul>
+    <li><a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a></li>
+</ul>
+<jsp:include page="/commands.jsp"/>
 </body>
 </html>

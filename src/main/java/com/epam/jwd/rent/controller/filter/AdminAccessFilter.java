@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {UrlPatterns.USERS, UrlPatterns.ORDERS}, initParams = {
+@WebFilter(urlPatterns = {UrlPatterns.BICYCLES, UrlPatterns.USERS, UrlPatterns.ORDERS}, initParams = {
         @WebInitParam(name = "page", value = UrlPatterns.MAIN) })
 public class AdminAccessFilter implements Filter {
 

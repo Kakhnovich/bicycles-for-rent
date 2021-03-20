@@ -3,6 +3,7 @@ package com.epam.jwd.rent.dao.impl;
 import com.epam.jwd.rent.dao.CommonDao;
 import com.epam.jwd.rent.model.Bicycle;
 import com.epam.jwd.rent.model.BicycleFactory;
+import com.epam.jwd.rent.model.Order;
 import com.epam.jwd.rent.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +32,11 @@ public class BicycleDao implements CommonDao<Bicycle> {
             "from bicycles join bicycle_models bm on bicycles.model_id = bm.id " +
             "join rent_places rp on bicycles.place_id = rp.id where bicycles.id=";
     private static final String SET_COUNT_SQL = "update bicycles set count=? where id=?";
+    private static final String FIND_BICYCLES_FOR_PAGE_SQL = "select bicycles.id, model, price, address, count " +
+            "from bicycles join bicycle_models bm on bicycles.model_id = bm.id " +
+            "join rent_places rp on bicycles.place_id = rp.id order by ";
+    private static final String GET_COUNT_OF_BICYCLES_SQL = "select count(id) AS count from bicycles";
+    private static final String COUNT_COLUMN_NAME = "count";
     private static final String MODEL_COLUMN_NAME = "model";
     private static final String ADDRESS_COLUMN_NAME = "address";
     private static final ConnectionPool POOL = ConnectionPool.getInstance();
@@ -68,6 +74,36 @@ public class BicycleDao implements CommonDao<Bicycle> {
 
     private Bicycle readBicycle(ResultSet resultSet) throws SQLException {
         return BicycleFactory.getInstance().create(resultSet);
+    }
+
+    @Override
+    public int getCountOfPages(int n) {
+        try (final Connection con = POOL.retrieveConnection();
+             final Statement statement = con.createStatement();
+             final ResultSet resultSet = statement.executeQuery(GET_COUNT_OF_BICYCLES_SQL)) {
+            if (resultSet.next()) {
+                return (resultSet.getInt(COUNT_COLUMN_NAME) + n - 1) / n;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQLException at method getCount: " + e.getSQLState());
+        }
+        return 0;
+    }
+
+    @Override
+    public Optional<List<Bicycle>> findByPageNumber(String column, int n) {
+        try (final Connection conn = POOL.retrieveConnection();
+             final Statement statement = conn.createStatement();
+             final ResultSet resultSet = statement.executeQuery(FIND_BICYCLES_FOR_PAGE_SQL + column + " LIMIT " + 3 * (n - 1) + ',' + 3)) {
+            List<Bicycle> bicycles = new ArrayList<>();
+            while (resultSet.next()) {
+                bicycles.add(readBicycle(resultSet));
+            }
+            return Optional.of(bicycles);
+        } catch (SQLException e) {
+            LOGGER.error("SQLException at method findAll: " + e.getSQLState());
+            return Optional.empty();
+        }
     }
 
     @Override

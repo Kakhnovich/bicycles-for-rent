@@ -7,6 +7,7 @@ import com.epam.jwd.rent.command.WrappingRequestContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,8 +33,16 @@ public class ApplicationController extends HttpServlet {
         String commandName = req.getParameter(COMMAND_PARAMETER_NAME);
         if (commandName == null) {
             commandName = DEFAULT_COMMAND_NAME;
+        } else if("order_page".equalsIgnoreCase(commandName)){
+            String place = String.valueOf(req.getParameter("place"));
+            final String date = String.valueOf(req.getParameter("date"));
+            Cookie placeCookie = new Cookie("place", place);
+            Cookie dateCookie = new Cookie("date", date);
+            resp.addCookie(placeCookie);
+            resp.addCookie(dateCookie);
         }
         final Command businessCommand = Command.of(commandName);
+
         final ResponseContext result = businessCommand.execute(WrappingRequestContext.of(req));
         if (result.isRedirect() || "CHANGE_LOCALE".equalsIgnoreCase(commandName)){
             resp.sendRedirect(result.getPage());

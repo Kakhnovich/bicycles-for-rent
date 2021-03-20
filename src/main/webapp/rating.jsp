@@ -50,6 +50,9 @@
 <br>
 <br>
 <br>
-<a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a>
+<ul>
+    <li><a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a></li>
+</ul>
+<jsp:include page="/commands.jsp"/>
 </body>
 </html>

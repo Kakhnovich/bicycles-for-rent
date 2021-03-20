@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:if test="${sessionScope.locale==null}">
     <c:set var="locale" value="en" scope="session"/>
@@ -8,7 +8,7 @@
 <fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title><fmt:message key="newOrder.title"/></title>
+    <title>New Order</title>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/controller?command=change_locale" method="post">
@@ -19,31 +19,22 @@
 </select>
     <input type="submit" value="<fmt:message key="global.submit"/>">
 </form>
-<h2><fmt:message key="newOrder.msg"/></h2>
-<form action="${pageContext.request.contextPath}/controller?command=new_order" method="post">
-    <h3><fmt:message key="bicycles.place"/>:
-        <select name="orderPlace">
-            <jsp:useBean id="places" scope="request" type="java.util.List"/>
-            <option selected="selected"><fmt:message key="global.select"/></option>
-            <c:forEach items="${places}" var="place">
-                <option value="${place}">${place}</option>
-            </c:forEach>
-        </select></h3>
-    <h3><fmt:message key="bicycles.model"/>:
-        <select name="orderModel">
-            <jsp:useBean id="models" scope="request" type="java.util.List"/>
-            <option selected="selected"><fmt:message key="global.select"/></option>
-            <c:forEach items="${models}" var="model">
-                <option value="${model}">${model}</option>
-            </c:forEach>
-        </select></h3>
-    <h3><fmt:message key="orders.date"/>: <input name="date" type="date"></h3>
-    <h3><fmt:message key="newOrder.hours"/>: <input name="hours" type="number" min=1 max=24></h3>
-    <input type="submit" value="<fmt:message key="global.submit"/>">
-</form>
+<h4>Available bicycles for this day:</h4>
+<c:forEach var="bicycle" items="${requestScope.bicycles}">
+    <form action="${pageContext.request.contextPath}/controller?command=new_order&model=${bicycle.model}" method="post">
+        <h5>${bicycle.model}</h5>
+        <h5>Price per hour - ${bicycle.price}</h5>
+        <h5><input name="hours" type="number" min="1" placeholder="Count of hours"></h5>
+        <input type="submit" value="to order">
+    </form>
+    <br>
+</c:forEach>
 <br>
 <br>
 <br>
-<a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a>
+<ul>
+    <li><a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a></li>
+</ul>
+<jsp:include page="/commands.jsp"/>
 </body>
 </html>

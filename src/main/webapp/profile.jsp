@@ -6,6 +6,7 @@
 </c:if>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="messages"/>
+<c:set var="cmnd" value="profile" scope="request"/>
 <html>
 <head>
     <title><fmt:message key="profile.title"/></title>
@@ -29,7 +30,6 @@
     </form>
 </h5>
 <h5>(<fmt:message key="profile.operation.changeBalance.msg"/>)</h5>
-<h3><fmt:message key="profile.role"/> - ${user.role}</h3>
 <c:if test="${not empty requestScope.orders}">
     <h3><fmt:message key="orders.title"/>:</h3>
     <table border="1" width="600">
@@ -48,10 +48,14 @@
             </tr>
         </c:forEach>
     </table>
+    <jsp:include page="pagination.jsp"/>
 </c:if>
 <br>
 <br>
 <br>
-<a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a>
+<ul>
+    <li><a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a></li>
+</ul>
+<jsp:include page="/commands.jsp"/>
 </body>
 </html>

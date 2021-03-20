@@ -25,15 +25,21 @@ public enum SignUpCommand implements Command {
     public ResponseContext execute(RequestContext request) {
         final String name = String.valueOf(request.getParameter("userName"));
         final String password = String.valueOf(request.getParameter("userPassword"));
-        final Optional<UserDto> user = userService.signUp(name, password);
+        final String repeatPassword = String.valueOf(request.getParameter("repeatPassword"));
         ResponseContext result;
-        if (user.isPresent()) {
-            request.setSessionAttribute("user", user.get());
-            sessions.addSession(user.get().getLogin(), request.getSession());
-            result = ShowMainPage.INSTANCE.execute(request);
-        } else {
+        if (!password.equals(repeatPassword)){
             request.setAttribute("errorMessage", "invalid credentials");
             result = ShowSignUpPage.INSTANCE.execute(request);
+        } else {
+            final Optional<UserDto> user = userService.signUp(name, password);
+            if (user.isPresent()) {
+                request.setSessionAttribute("user", user.get());
+                sessions.addSession(user.get().getLogin(), request.getSession());
+                result = ShowMainPage.INSTANCE.execute(request);
+            } else {
+                request.setAttribute("errorMessage", "invalid credentials");
+                result = ShowSignUpPage.INSTANCE.execute(request);
+            }
         }
         return result;
     }

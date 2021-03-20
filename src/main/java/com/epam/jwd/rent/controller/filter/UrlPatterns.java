@@ -1,6 +1,7 @@
 package com.epam.jwd.rent.controller.filter;
 
 public final class UrlPatterns {
+    public static final String INDEX = "/index.jsp";
     public static final String MAIN = "/main.jsp";
     public static final String LOGIN = "/login.jsp";
     public static final String BICYCLES = "/bicycles.jsp";

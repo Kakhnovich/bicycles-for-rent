@@ -23,15 +23,17 @@ public enum ChangeUserInformationCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        String option = String.valueOf(request.getParameter("selectedOption"));
+        String option = String.valueOf(request.getParameter("option"));
         String login = String.valueOf(request.getParameter("selectedUser"));
         ActiveUserSessions sessions = ActiveUserSessions.getInstance();
         if (!login.equals("null")) {
             Optional<UserDto> user = new UserService().findByLogin(login);
             HttpSession session = sessions.getSession(user.get().getLogin());
-            sessions.removeSession(user.get().getLogin());
             if (option.equals("ban")) {
-                session.invalidate();
+                if (session!=null) {
+                    sessions.removeSession(user.get().getLogin());
+                    session.invalidate();
+                }
                 userDao.banUser(login);
             } else {
                 userDao.promoteUser(login);

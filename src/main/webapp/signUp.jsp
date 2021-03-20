@@ -23,6 +23,7 @@
 <form action="${pageContext.request.contextPath}/controller?command=sign_up" method="post">
     <input name="userName" placeholder="<fmt:message key="login.title"/>">
     <input type="password" name="userPassword" placeholder="<fmt:message key="login.userPassword"/>">
+    <input type="password" name="repeatPassword" placeholder="repeat Password">
     <input type="submit" value="<fmt:message key="global.submit"/>">
 </form>
 <br>

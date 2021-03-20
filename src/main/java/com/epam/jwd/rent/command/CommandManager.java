@@ -7,6 +7,7 @@ import com.epam.jwd.rent.command.order.NewOrderCommand;
 import com.epam.jwd.rent.command.page.ShowAllBicyclesCommand;
 import com.epam.jwd.rent.command.page.ShowAllOrdersCommand;
 import com.epam.jwd.rent.command.page.ShowMainPage;
+import com.epam.jwd.rent.command.page.ShowOrderCreationPage;
 import com.epam.jwd.rent.command.page.ShowProfileCommand;
 import com.epam.jwd.rent.command.page.ShowAllUsersCommand;
 import com.epam.jwd.rent.command.user.ChangeBalanceCommand;
@@ -17,21 +18,22 @@ import com.epam.jwd.rent.command.user.RatingCommand;
 import com.epam.jwd.rent.command.user.SignUpCommand;
 
 public enum CommandManager {
-    DEFAULT(ShowMainPage.INSTANCE),
     LOGIN(LoginCommand.INSTANCE),
     SIGN_UP(SignUpCommand.INSTANCE),
     CHANGE_LOCALE(ChangeLocaleCommand.INSTANCE),
     LOGOUT(LogoutCommand.INSTANCE),
     RATING(RatingCommand.INSTANCE),
-    SHOW_BICYCLES(ShowAllBicyclesCommand.INSTANCE),
+    ORDER_PAGE(ShowOrderCreationPage.INSTANCE),
     NEW_ORDER(NewOrderCommand.INSTANCE),
     PROFILE(ShowProfileCommand.INSTANCE),
     CHANGE_BALANCE(ChangeBalanceCommand.INSTANCE),
     CHANGE_BICYCLES_COUNT(ChangeBicyclesCountCommand.INSTANCE),
     ORDERS(ShowAllOrdersCommand.INSTANCE),
+    SHOW_BICYCLES(ShowAllBicyclesCommand.INSTANCE),
     CHANGE_ORDER_STATUS(ChangeOrderStatusCommand.INSTANCE),
     USERS(ShowAllUsersCommand.INSTANCE),
-    CHANGE_USER_INFORMATION(ChangeUserInformationCommand.INSTANCE);
+    CHANGE_USER_INFORMATION(ChangeUserInformationCommand.INSTANCE),
+    DEFAULT(ShowMainPage.INSTANCE);
 
     private final Command command;
 

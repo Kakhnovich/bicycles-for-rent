@@ -27,6 +27,9 @@ public class OrderDao implements CommonDao<Order> {
     private static final String FIND_ORDER_BY_ID_SQL = "select * from orders where id=";
     private static final String CREATE_NEW_ORDER_SQL = "insert into orders value(?,?,?,?,?,?)";
     private static final String SET_STATUS_SQL = "update orders set status=? where id=?";
+    private static final String FIND_ORDERS_FOR_PAGE_SQL = "select * from orders order by ";
+    private static final String GET_COUNT_OF_ORDERS_SQL = "select count(id) AS count from orders";
+    private static final String COUNT_COLUMN_NAME = "count";
     private static final ConnectionPool POOL = ConnectionPool.getInstance();
     private static final Logger LOGGER = LogManager.getLogger(OrderDao.class);
     private final ReentrantLock lock = new ReentrantLock();
@@ -45,6 +48,36 @@ public class OrderDao implements CommonDao<Order> {
         try (final Connection conn = POOL.retrieveConnection();
              final Statement statement = conn.createStatement();
              final ResultSet resultSet = statement.executeQuery(FIND_ALL_ORDERS_SQL)) {
+            List<Order> orders = new ArrayList<>();
+            while (resultSet.next()) {
+                orders.add(readOrder(resultSet));
+            }
+            return Optional.of(orders);
+        } catch (SQLException e) {
+            LOGGER.error("SQLException at method findAll: " + e.getSQLState());
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public int getCountOfPages(int n) {
+        try (final Connection con = POOL.retrieveConnection();
+             final Statement statement = con.createStatement();
+             final ResultSet resultSet = statement.executeQuery(GET_COUNT_OF_ORDERS_SQL)) {
+            if(resultSet.next()) {
+                return (resultSet.getInt(COUNT_COLUMN_NAME) + n - 1) / n;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQLException at method getCount: " + e.getSQLState());
+        }
+        return 0;
+    }
+
+    @Override
+    public Optional<List<Order>> findByPageNumber(String column, int n) {
+        try (final Connection conn = POOL.retrieveConnection();
+             final Statement statement = conn.createStatement();
+             final ResultSet resultSet = statement.executeQuery(FIND_ORDERS_FOR_PAGE_SQL + column + " LIMIT " + 3 * (n - 1) + ',' + 3)) {
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
                 orders.add(readOrder(resultSet));
@@ -103,7 +136,7 @@ public class OrderDao implements CommonDao<Order> {
                 return user.get().getLogin();
             }
         }
-        throw new NoSuchEntityException("Unknown user id(" + userId +')');
+        throw new NoSuchEntityException("Unknown user id(" + userId + ')');
     }
 
     public String findBicycleModel(int bicycleId) throws SQLException {
@@ -114,7 +147,7 @@ public class OrderDao implements CommonDao<Order> {
                 return currentBicycle.get().getModel();
             }
         }
-        throw new NoSuchEntityException("Unknown bicycle model id(" + bicycleId +')');
+        throw new NoSuchEntityException("Unknown bicycle model id(" + bicycleId + ')');
     }
 
     public Optional<List<Order>> findAllOrdersByUserName(String name) {

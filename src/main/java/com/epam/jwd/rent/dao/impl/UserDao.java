@@ -1,5 +1,6 @@
 package com.epam.jwd.rent.dao.impl;
 
+import com.epam.jwd.rent.model.Order;
 import com.epam.jwd.rent.model.User;
 import com.epam.jwd.rent.model.UserFactory;
 import com.epam.jwd.rent.pool.ConnectionPool;
@@ -14,7 +15,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -27,7 +30,15 @@ public class UserDao implements CommonDao<User> {
     private static final String SET_BALANCE_SQL = "update persons set balance=? where login=?";
     private static final String BANE_USER_SQL = "update persons set banned=true where login=?";
     private static final String PROMOTE_USER_SQL = "update persons set status_id=1 where login=?";
+    private static final String GET_RATING_BY_ORDERS_SQL
+            = "select person_id, count(id) as count  from orders GROUP BY person_id order by count desc LIMIT 3";
+    private static final String GET_RATING_BY_HOURS_SQL
+            = "select person_id, sum(hours) as count  from orders GROUP BY person_id order by count desc LIMIT 3";
+    private static final String FIND_USERS_FOR_PAGE_SQL = "select * from persons order by ";
+    private static final String GET_COUNT_OF_USERS_SQL = "select count(id) AS count from persons";
+    private static final String COUNT_COLUMN_NAME = "count";
     private static final String PERSON_STATUS_COLUMN_NAME = "type";
+    private static final String PERSON_ID_COLUMN_NAME = "person_id";
     private static final ConnectionPool POOL = ConnectionPool.getInstance();
     private static final Logger LOGGER = LogManager.getLogger(UserDao.class);
     private final ReentrantLock lock = new ReentrantLock();
@@ -79,6 +90,36 @@ public class UserDao implements CommonDao<User> {
             return Optional.empty();
         } finally {
             lock.unlock();
+        }
+    }
+
+    @Override
+    public int getCountOfPages(int n) {
+        try (final Connection con = POOL.retrieveConnection();
+             final Statement statement = con.createStatement();
+             final ResultSet resultSet = statement.executeQuery(GET_COUNT_OF_USERS_SQL)) {
+            if(resultSet.next()) {
+                return (resultSet.getInt(COUNT_COLUMN_NAME) + n - 1) / n;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQLException at method getCount: " + e.getSQLState());
+        }
+        return 0;
+    }
+
+    @Override
+    public Optional<List<User>> findByPageNumber(String column, int n) {
+        try (final Connection conn = POOL.retrieveConnection();
+             final Statement statement = conn.createStatement();
+             final ResultSet resultSet = statement.executeQuery(FIND_USERS_FOR_PAGE_SQL + column + " LIMIT " + 3 * (n - 1) + ',' + 3)) {
+            List<User> users = new ArrayList<>();
+            while (resultSet.next()) {
+                users.add(readPerson(resultSet));
+            }
+            return Optional.of(users);
+        } catch (SQLException e) {
+            LOGGER.error("SQLException at method findAll: " + e.getSQLState());
+            return Optional.empty();
         }
     }
 
@@ -163,5 +204,20 @@ public class UserDao implements CommonDao<User> {
         } catch (SQLException e) {
             LOGGER.error("SQLException at method findById: " + e.getSQLState());
         }
+    }
+
+    public Map<String, Integer> getRating(String criteria) {
+        Map<String, Integer> rezMap = new HashMap<>();
+        final String QUERY = "hours".equals(criteria) ? GET_RATING_BY_HOURS_SQL : GET_RATING_BY_ORDERS_SQL;
+        try (final Connection conn = POOL.retrieveConnection();
+             final Statement statement = conn.createStatement();
+             final ResultSet resultSet = statement.executeQuery(QUERY)) {
+            while (resultSet.next()) {
+                rezMap.put(findById(resultSet.getInt(PERSON_ID_COLUMN_NAME)).get().getLogin(), resultSet.getInt(COUNT_COLUMN_NAME));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQLException at method getRatingByOrdersCount: " + e.getSQLState());
+        }
+        return rezMap;
     }
 }

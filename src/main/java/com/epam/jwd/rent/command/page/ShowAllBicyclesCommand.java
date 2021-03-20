@@ -3,6 +3,7 @@ package com.epam.jwd.rent.command.page;
 import com.epam.jwd.rent.command.Command;
 import com.epam.jwd.rent.command.RequestContext;
 import com.epam.jwd.rent.command.ResponseContext;
+import com.epam.jwd.rent.dao.impl.BicycleDao;
 import com.epam.jwd.rent.model.BicycleDto;
 import com.epam.jwd.rent.service.BicycleService;
 import com.epam.jwd.rent.service.CommonService;
@@ -27,7 +28,7 @@ public enum ShowAllBicyclesCommand implements Command {
 
     private static final String BICYCLES_ATTRIBUTE_NAME = "bicycles";
 
-    private final CommonService<BicycleDto> bicycleService;
+    private final BicycleService bicycleService;
 
     ShowAllBicyclesCommand() {
         bicycleService = new BicycleService();
@@ -35,7 +36,16 @@ public enum ShowAllBicyclesCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContext request) {
-        final List<BicycleDto> bicycles = bicycleService.findAll().orElse(Collections.emptyList());
+        String page = String.valueOf(request.getParameter("page"));
+        final int pageNumber = (page.equals("null")) ? 1 : Integer.parseInt(page);
+        request.setAttribute("page", pageNumber);
+        request.setAttribute("count", new BicycleDao().getCountOfPages(3));
+        String column = String.valueOf(request.getParameter("column"));
+        if(column.equals("null")){
+            column = "model";
+        }
+        request.setAttribute("column", column);
+        final List<BicycleDto> bicycles = bicycleService.findByPage(column, pageNumber).orElse(Collections.emptyList());
         request.setAttribute(BICYCLES_ATTRIBUTE_NAME, bicycles);
         return BICYCLES_PAGE_RESPONSE;
     }

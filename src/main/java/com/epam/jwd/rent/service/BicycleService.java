@@ -1,11 +1,14 @@
 package com.epam.jwd.rent.service;
 
 import com.epam.jwd.rent.dao.impl.BicycleDao;
+import com.epam.jwd.rent.dao.impl.OrderDao;
 import com.epam.jwd.rent.model.Bicycle;
 import com.epam.jwd.rent.model.BicycleDto;
 import com.epam.jwd.rent.model.BicycleFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +26,13 @@ public class BicycleService implements CommonService<BicycleDto> {
     @Override
     public Optional<List<BicycleDto>> findAll() {
         return bicycleDao.findAll()
+                .map(bicycles -> bicycles.stream()
+                        .map(this::convertToDto)
+                        .collect(toList()));
+    }
+
+    public Optional<List<BicycleDto>> findByPage(String column, int page){
+        return bicycleDao.findByPageNumber(column, page)
                 .map(bicycles -> bicycles.stream()
                         .map(this::convertToDto)
                         .collect(toList()));
@@ -58,6 +68,24 @@ public class BicycleService implements CommonService<BicycleDto> {
             }
         }
 
+    }
+
+    public List<BicycleDto> findBicyclesToOder(String place, LocalDate date) {
+        List<Bicycle> bicycles = bicycleDao.findAll().get().stream()
+                .filter(bicycle -> bicycle.getPlace().equals(place)).collect(toList());
+        List<Bicycle> rezList = new ArrayList<>();
+        for (Bicycle bicycle : bicycles) {
+            int countOfUsed = (int) new OrderDao().findAll().get().stream()
+                    .filter(order -> order.getDate().compareTo(date) == 0)
+                    .filter(order -> order.getBicycle_id() == bicycle.getId())
+                    .count();
+            if (countOfUsed < bicycle.getCount()) {
+                rezList.add(bicycle);
+            }
+        }
+        return rezList.stream()
+                .map(this::convertToDto)
+                .collect(toList());
     }
 
     private BicycleDto convertToDto(Bicycle bicycle) {

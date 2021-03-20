@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {UrlPatterns.RATING, UrlPatterns.BICYCLES}, initParams = {
+@WebFilter(urlPatterns = {UrlPatterns.RATING}, initParams = {
         @WebInitParam(name = "page", value = UrlPatterns.LOGIN) })
 public class GeneralAccessFilter implements Filter {
 

@@ -1,5 +1,6 @@
 package com.epam.jwd.rent.command;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 public interface RequestContext {
@@ -21,4 +22,6 @@ public interface RequestContext {
     Object getSessionAttribute(String name);
 
     String getHeader(String referer);
+
+    String getCookieValue(String name);
 }
