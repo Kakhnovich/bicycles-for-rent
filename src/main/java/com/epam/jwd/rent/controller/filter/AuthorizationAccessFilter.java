@@ -15,23 +15,35 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-
+/**
+ * Filter for authorized persons possibilities about jsp pages
+ * @see Filter
+ * @author Elmax19
+ * @version 1.0
+ */
 @WebFilter(urlPatterns = {UrlPatterns.LOGIN, UrlPatterns.SIGN_UP}, initParams = {
-        @WebInitParam(name = "page", value = UrlPatterns.MAIN) })
+        @WebInitParam(name = "page", value = UrlPatterns.INDEX) })
 public class AuthorizationAccessFilter implements Filter {
-
+    /**
+     * variable of page to redirect to
+     */
     private String page;
+    /**
+     * variables of parameter an attribute names
+     */
+    private static final String INIT_PARAMETER_NAME = "page";
+    private static final String USER_ATTRIBUTE_NAME = "user";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        page = filterConfig.getInitParameter("page");
+        page = filterConfig.getInitParameter(INIT_PARAMETER_NAME);
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest hRequest = (HttpServletRequest) request;
         HttpSession session = hRequest.getSession();
-        UserDto user = (UserDto) session.getAttribute("user");
+        UserDto user = (UserDto) session.getAttribute(USER_ATTRIBUTE_NAME);
         if (user != null) {
             HttpServletResponse hResponse = (HttpServletResponse) response;
             hResponse.sendRedirect(hRequest.getContextPath() + page);

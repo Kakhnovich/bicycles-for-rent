@@ -1,0 +1,280 @@
+html {
+    background-color: #E1E6F1;
+}
+
+body {
+    width: 1000px;
+    margin: 3px auto;
+    padding: 0 0 80px;
+    background-color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 8px;
+}
+
+header {
+    padding: 0 20px;
+}
+
+.mainBody {
+    padding: 0 20px 0 80px;
+}
+
+form {
+    margin: 0;
+}
+
+a {
+    color: #101010;
+}
+
+a:hover {
+    color: #666666;
+    text-decoration: none;
+}
+
+.selected {
+    color: #666666;
+    text-decoration: none;
+}
+
+h1, h2, div {
+    margin: 0;
+    padding: 15px 0 0;
+    color: #101010;
+}
+
+p {
+    opacity: 0.6;
+    margin: 0;
+    padding: 15px 0;
+    color: #101010;
+}
+
+.date {
+    margin: 0 0 0 10px;
+    color: #101010;
+}
+
+.forms {
+    width: max-content;
+    text-align: center;
+    margin: 15px 0 0 0;
+    padding: 10px 30px 20px;
+    color: #101010;
+    background-color: #E1E6F1;
+    border-radius: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.bicycles {
+    display: flex;
+    width: 525px;
+    justify-content: space-between;
+    margin: 15px 0 0 30px;
+    padding: 10px 30px 20px;
+    background-color: #E1E6F1;
+    border-radius: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.bicycles div.forms {
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+}
+
+div img.img {
+    justify-content: flex-end;
+    border-radius: 10px;
+    border: 1px solid #666666;
+    height: 150px;
+    margin: 0;
+    padding: 0;
+}
+
+.balance {
+    width: 300px;
+    margin: 10px 0 15px 0;
+    padding: 10px 10px 10px 10px;
+    color: #101010;
+    background-color: #E1E6F1;
+    border-radius: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.submit {
+    background-color: #101010;
+    border: none;
+    color: #ffffff;
+    padding: 15px 32px;
+    margin: 0 auto;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.locale {
+    width: max-content;
+    text-align: center;
+    margin: 0 0 0 15px;
+    padding: 0;
+    height: 28px;
+}
+
+.locale div {
+    border-radius: 5px;
+    background-color: #2C4176;
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 10px 15px 11px;
+}
+
+.locale div.lang {
+    margin: -7px 0 0;
+    padding: 0 15px 5px;
+}
+
+div.lang {
+    background: #2C4176;
+    width: revert;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 0 0 5px 5px;
+    padding: 5px;
+    display: none;
+    margin: 0;
+}
+
+.locale:hover .lang {
+    display: block;
+}
+
+.lang div a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.lang div {
+    padding: 3px 0 3px;
+}
+
+.localeButton {
+    background-color: #101010;
+    border: none;
+    color: #ffffff;
+    padding: 5px 5px 5px 5px;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+input.logging {
+    background-color: #2C4176;
+    border: none;
+    color: #FFFFFF;
+    border-radius: 19px;
+    font-weight: bold;
+    padding: 11px 20px;
+    text-decoration: none;
+}
+
+a.number {
+    text-decoration: none;
+}
+
+.logging:focus {
+    outline: none;
+}
+
+div.firstSect {
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0 0 30px;
+    padding: 0 0 0 25px;
+    background-color: #E1E6F1;
+}
+
+nav div {
+    padding: 10px 25px 10px 0;
+    font-size: 20px;
+}
+
+p.error {
+    color: #E10000;
+    margin: 15px 0 0 0;
+    padding: 0;
+}
+
+div.sect {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+}
+
+div.logo {
+    display: flex;
+    justify-content: flex-start;
+    padding: 0;
+}
+
+div.info {
+    padding: 10px 0 0;
+}
+
+.text {
+    width: 218px;
+    color: #666666;
+    height: 32px;
+    padding: 0 0 0 10px;
+    background: #FFFFFF;
+    border: 1px solid #B6BCC8;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.formButton {
+    border: none;
+    color: #ffffff;
+    padding: 5px 10px 5px;
+    text-decoration: none;
+    font-size: 13px;
+    width: 218px;
+    height: 32px;
+    background: #252222;
+    border-radius: 4px;
+    margin: 10px 0 0;
+}
+
+.formButton:focus {
+    outline: none;
+}
+
+th {
+    background-color: #E1E6F1;
+}
+
+table {
+    width: max-content;
+    color: #101010;
+    border: #101010;
+    background-color: #F6F7FA;
+    font-family: 'Roboto', sans-serif;
+    margin: 20px 0 0;
+}
+
+th, td {
+    width: max-content;
+    padding: 5px 10px;
+}
+
+td.button {
+    text-align: center;
+}
+
+

@@ -50,7 +50,7 @@ public class Bicycle {
     static class BicycleBuilder {
         private int id;
         private String model;
-        private BigDecimal price;
+        private BigDecimal price = BigDecimal.ZERO;
         private String place;
         private int count;
 

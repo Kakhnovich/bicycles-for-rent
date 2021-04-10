@@ -8,28 +8,26 @@
 <fmt:setBundle basename="messages"/>
 <html>
 <head>
+    <link href="styles/style.css" rel="stylesheet">
     <title><fmt:message key="mainPage.title"/></title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/controller?command=change_locale" method="post">
-    <fmt:message key="global.locale"/>: <select name="locale">
-    <option value="en"><fmt:message key="global.en"/></option>
-    <option value="ru"><fmt:message key="global.ru"/></option>
-    <option value="cn"><fmt:message key="global.cn"/></option>
-</select>
-    <input type="submit" value="<fmt:message key="global.submit"/>">
-</form>
-<h2><fmt:message key="mainPage.hello1"/></h2>
-<h4>Our places:</h4>
-<c:forEach var="place" items="${requestScope.places}">
-    <form action="${pageContext.request.contextPath}/controller?command=order_page&place=${place}" method="post">
-        <h5>${place}</h5>
-        <h5>Chose date - <input name="date" type="date" value=""></h5>
-<%--        todo check--%>
-        <input type="submit" value="see available bicycles">
-    </form>
-    <br>
-</c:forEach>
-<jsp:include page="/commands.jsp" />
+<jsp:include page="/commands.jsp"/>
+<div class="mainBody">
+    <h1><fmt:message key="mainPage.hello1"/></h1>
+    <h2><fmt:message key="mainPage.msg"/>:</h2>
+    <c:forEach var="place" items="${requestScope.places}">
+        <form class="forms"
+              action="${pageContext.request.contextPath}/controller?command=order_page&place=${place.address}"
+              method="post">
+            <div><b>${place.address}</b></div>
+            <div><fmt:message key="mainPage.open"/> <i>${place.openTime}</i> <fmt:message key="mainPage.close"/>
+                <i>${place.closeTime}</i></div>
+            <div><fmt:message key="mainPage.chose"/> <input class="date" name="date" type="date" value=""></div>
+            <div><input class="submit" type="submit" value="<fmt:message key="mainPage.button"/>"></div>
+        </form>
+        <br>
+    </c:forEach>
+</div>
 </body>
 </html>

@@ -6,23 +6,43 @@ import com.epam.jwd.rent.model.Bicycle;
 import com.epam.jwd.rent.model.BicycleDto;
 import com.epam.jwd.rent.model.BicycleFactory;
 
+import com.epam.jwd.rent.model.User;
+import com.epam.jwd.rent.model.UserDto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Service class to work with Bicycles
+ *
+ * @author Elmax19
+ * @version 1.0
+ */
 public class BicycleService implements CommonService<BicycleDto> {
-
+    /**
+     * {@link BicycleDao} class to call
+     */
     private final BicycleDao bicycleDao;
 
+    /**
+     * default class constructor - init {@link BicycleService#bicycleDao}
+     */
     public BicycleService() {
         this.bicycleDao = new BicycleDao();
     }
 
+    /**
+     * {@link CommonService} method realisation
+     * @return list of all Bicycles dto
+     * @see CommonService
+     */
     @Override
     public Optional<List<BicycleDto>> findAll() {
         return bicycleDao.findAll()
@@ -31,46 +51,49 @@ public class BicycleService implements CommonService<BicycleDto> {
                         .collect(toList()));
     }
 
-    public Optional<List<BicycleDto>> findByPage(String column, int page){
+    /**
+     * method to find Bicycles dto for one of pages
+     * @param column sort column name in database
+     * @param page page number
+     * @return list of Bicycles dto by page
+     */
+    public Optional<List<BicycleDto>> findByPage(String column, int page) {
         return bicycleDao.findByPageNumber(column, page)
                 .map(bicycles -> bicycles.stream()
                         .map(this::convertToDto)
                         .collect(toList()));
     }
 
-    public Optional<List<String>> findModels() {
-        Optional<List<BicycleDto>> bicycles = findAll();
-        return bicycles.map(bicycleDto -> bicycleDto.stream()
-                .map(BicycleDto::getModel)
-                .distinct()
-                .collect(Collectors.toList()));
-    }
-
-    public void changeBicyclesCount(String model, String place, BigDecimal price, int count) {
+    /**
+     * method to increase or decrease count of bicycles at rent places
+     * @param model bicycles model name
+     * @param place rent place
+     * @param count count of bicycles
+     * @return has been method worked correct
+     */
+    public boolean changeBicyclesCount(String model, String place, int count) {
         Optional<Bicycle> bicycles = bicycleDao.findAll().get().stream()
                 .filter(bicycle -> bicycle.getModel().equals(model))
                 .filter(bicycle -> bicycle.getPlace().equals(place))
                 .findFirst();
-        if (count < 0) {
-            if (bicycles.isPresent()) {
-                if (bicycles.get().getPrice().compareTo(price) == 0) {
-                    bicycleDao.changeCountOfBicycles(bicycles.get().getId(), Math.max(bicycles.get().getCount() + count, 0));
-                }
-            }
-        } else {
-            if (bicycles.isPresent()) {
-                if (bicycles.get().getPrice().compareTo(price) == 0) {
-                    bicycleDao.changeCountOfBicycles(bicycles.get().getId(), bicycles.get().getCount() + count);
-                } else {
-                    Bicycle bicycle = BicycleFactory.getInstance().create(model, price, place, count);
-                    bicycleDao.create(bicycle);
-                }
+        if (bicycles.isPresent()){
+            if (count < 0) {
+                return bicycleDao.changeCountOfBicycles(bicycles.get().getId(), Math.max(bicycles.get().getCount() + count, 0));
+            } else {
+                return bicycleDao.changeCountOfBicycles(bicycles.get().getId(), bicycles.get().getCount() + count);
             }
         }
-
+        return false;
     }
 
-    public List<BicycleDto> findBicyclesToOder(String place, LocalDate date) {
+    /**
+     * method that find available bicycles for ordering
+     * @param place bicycles rent place
+     * @param date order date
+     * @return map of available bicycles
+     */
+    public Map<Integer, BicycleDto> findBicyclesToOder(String place, LocalDate date) {
+        Map<Integer, BicycleDto> rezMap = new HashMap<>();
         List<Bicycle> bicycles = bicycleDao.findAll().get().stream()
                 .filter(bicycle -> bicycle.getPlace().equals(place)).collect(toList());
         List<Bicycle> rezList = new ArrayList<>();
@@ -83,11 +106,15 @@ public class BicycleService implements CommonService<BicycleDto> {
                 rezList.add(bicycle);
             }
         }
-        return rezList.stream()
-                .map(this::convertToDto)
-                .collect(toList());
+        rezList.forEach(bicycle -> rezMap.put(bicycleDao.findModelId(bicycle.getModel()), convertToDto(bicycle)));
+        return rezMap;
     }
 
+    /**
+     * method to covert {@link Bicycle} model to {@link BicycleDto}
+     * @param bicycle {@link Bicycle} object
+     * @return converted {@link BicycleDto} object
+     */
     private BicycleDto convertToDto(Bicycle bicycle) {
         return new BicycleDto(bicycle.getModel(),
                 bicycle.getPrice(),

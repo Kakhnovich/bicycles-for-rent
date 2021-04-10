@@ -4,10 +4,22 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * {@link RequestContext} wrapper class
+ * @author Elmax19
+ * @version 1.0
+ */
 public class WrappingRequestContext implements RequestContext {
 
+    /**
+     * variable of original request
+     */
     private final HttpServletRequest request;
 
+    /**
+     * class constructor - declare {@link WrappingRequestContext#request}
+     * @param request received request
+     */
     private WrappingRequestContext(HttpServletRequest request) {
         this.request = request;
     }
@@ -15,11 +27,6 @@ public class WrappingRequestContext implements RequestContext {
     @Override
     public void setAttribute(String name, Object obj) {
         request.setAttribute(name, obj);
-    }
-
-    @Override
-    public Object getAttribute(String name) {
-        return request.getAttribute(name);
     }
 
     @Override
@@ -72,6 +79,11 @@ public class WrappingRequestContext implements RequestContext {
         return "";
     }
 
+    /**
+     * method of wrapping {@link HttpServletRequest} into {@link RequestContext}
+     * @param request received request
+     * @return result of {@link WrappingRequestContext#WrappingRequestContext(HttpServletRequest)} constructor
+     */
     public static RequestContext of(HttpServletRequest request) {
         return new WrappingRequestContext(request);
     }

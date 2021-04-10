@@ -8,30 +8,25 @@
 <fmt:setBundle basename="messages"/>
 <html>
 <head>
+    <link href="styles/style.css" rel="stylesheet" type="text/css">
     <title><fmt:message key="login.title"/></title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/controller?command=change_locale" method="post">
-    <fmt:message key="global.locale"/>: <select name="locale">
-    <option value="en"><fmt:message key="global.en"/></option>
-    <option value="ru"><fmt:message key="global.ru"/></option>
-    <option value="cn"><fmt:message key="global.cn"/></option>
-</select>
-    <input type="submit" value="<fmt:message key="global.submit"/>">
-</form>
-<h4><fmt:message key="login.msg"/></h4>
-<form action="${pageContext.request.contextPath}/controller?command=login" method="post">
-    <input name="userName" placeholder="<fmt:message key="login.title"/>">
-    <input type="password" name="userPassword" placeholder="<fmt:message key="login.userPassword"/>">
-    <input type="submit" value="<fmt:message key="global.submit"/>">
-</form>
-<br>
-<h4><fmt:message key="login.regMsg"/>? <a
-        href=${pageContext.request.contextPath}/controller?command=sign_up><fmt:message
-        key="login.toRegistration"/></a></h4>
-<br>
-<br>
-<br>
-<a href=${pageContext.request.contextPath}/controller><fmt:message key="global.toMain"/></a>
+<jsp:include page="/commands.jsp"/>
+<div class="mainBody">
+    <h2><fmt:message key="login.msg"/></h2>
+    <form class="forms" action="${pageContext.request.contextPath}/controller?command=login" method="post">
+        <div><input class="text" name="userName" placeholder="<fmt:message key="login.title"/>"></div>
+        <div><input class="text" type="password" name="userPassword"
+                    placeholder="<fmt:message key="login.userPassword"/>"></div>
+        <div><input class="formButton" type="submit" value="<fmt:message key="global.submit"/>"></div>
+        <c:if test="${!cookie['errorMessage'].value.equals('')}">
+            <p class="error">${cookie['errorMessage'].value}</p>
+        </c:if>
+    </form>
+    <p><fmt:message key="login.regMsg"/>? <a
+            href=${pageContext.request.contextPath}/controller?command=sign_up><fmt:message
+            key="login.toRegistration"/></a></p>
+</div>
 </body>
 </html>

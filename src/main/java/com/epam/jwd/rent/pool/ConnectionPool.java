@@ -17,30 +17,75 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Class to store connections.
+ * Automatically increases and decreases storage capacity
+ * @author Elmax19
+ * @version 1.0
+ */
 public class ConnectionPool {
+    /**
+     * class logger for logging errors
+     */
     static final Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
+    /**
+     * Singleton realisation
+     */
     private static final ConnectionPool INSTANCE = new ConnectionPool();
+    /**
+     * store of used connections
+     */
     private final List<ProxyConnection> usedConnections = new ArrayList<>();
+    /**
+     * {@link ReentrantLock} to lock methods
+     */
     private final ReentrantLock lock = new ReentrantLock();
+    /**
+     * condition when non used connections storage if not empty
+     */
     private final Condition notEmpty = lock.newCondition();
+    /**
+     * store of non used connections
+     */
     private ArrayBlockingQueue<ProxyConnection> connections;
+    /**
+     * variables to work with database
+     */
     private String url;
     private String username;
     private String password;
+    /**
+     * minimal and maximal storage capacity values
+     */
     private int MIN_CONNECTIONS_AMOUNT;
     private int MAX_CONNECTIONS_AMOUNT;
 
+    /**
+     * default class constructor
+     */
     private ConnectionPool() {
     }
 
+    /**
+     * singleton getter
+     * @return {@link ConnectionPool#INSTANCE}
+     */
     public static ConnectionPool getInstance() {
         return INSTANCE;
     }
 
+    /**
+     * method to check condition
+     * @return true if storage is empty
+     */
     public boolean isEmpty() {
         return connections.isEmpty();
     }
 
+    /**
+     * method that gives back connection from unused storage
+     * @return one of connections
+     */
     public Connection retrieveConnection() {
         lock.lock();
         ProxyConnection con = null;
@@ -62,6 +107,10 @@ public class ConnectionPool {
         return con;
     }
 
+    /**
+     * method that return connection to storage
+     * @param connection received connection
+     */
     public void returnConnection(Connection connection) {
         if (usedConnections.stream().anyMatch(con -> con.equals(connection))) {
             lock.lock();
@@ -82,6 +131,9 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * method that inits {@link ConnectionPool#MIN_CONNECTIONS_AMOUNT} connections
+     */
     public void init() {
         initParams();
         registerDrivers();
@@ -90,6 +142,9 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * method that inits class variables to work with database
+     */
     private void initParams() {
         final String fileName = "database.properties";
         try {
@@ -107,6 +162,9 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * method that create new connection and put it in storage
+     */
     private void createNewConnection() {
         lock.lock();
         try {
@@ -121,12 +179,17 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * method that destroy all connections when tge server closes
+     */
     public void destroy() {
         connections.forEach(ProxyConnection::closeConnection);
         deregisterDrivers();
     }
 
-
+    /**
+     * method that declare jdbc driver
+     */
     private static void registerDrivers() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -136,7 +199,9 @@ public class ConnectionPool {
         }
     }
 
-
+    /**
+     * method that deregister jdbc driver
+     */
     private static void deregisterDrivers() {
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {

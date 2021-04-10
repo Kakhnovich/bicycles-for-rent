@@ -9,6 +9,12 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+/**
+ * Custom listener of initialization and destroying of the server
+ * @see ServletContextListener
+ * @author Elmax19
+ * @version 1.0
+ */
 @WebListener
 public class ApplicationListener implements ServletContextListener {
     @Override
@@ -22,6 +28,9 @@ public class ApplicationListener implements ServletContextListener {
         ConnectionPool.getInstance().destroy();
     }
 
+    /**
+     * method of initialisation of count of each model in database
+     */
     private void initCountOfEntities() {
         new UserDao().initCountOfUsers();
         new OrderDao().initCountOfOrders();

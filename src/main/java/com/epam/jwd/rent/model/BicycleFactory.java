@@ -29,10 +29,9 @@ public class BicycleFactory {
                 .build();
     }
 
-    public Bicycle create(String model, BigDecimal price, String place, int count) {
+    public Bicycle create(String model, String place, int count) {
         return Bicycle.builder()
                 .model(model)
-                .price(price)
                 .place(place)
                 .count(count)
                 .build();

@@ -1,8 +1,12 @@
 package com.epam.jwd.rent.controller.filter;
 
+/**
+ * Class of possible url patterns
+ * @author Elmax19
+ * @version 1.0
+ */
 public final class UrlPatterns {
     public static final String INDEX = "/index.jsp";
-    public static final String MAIN = "/main.jsp";
     public static final String LOGIN = "/login.jsp";
     public static final String BICYCLES = "/bicycles.jsp";
     public static final String NEW_ORDER = "/newOrder.jsp";

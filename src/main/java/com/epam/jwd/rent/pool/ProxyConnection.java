@@ -22,10 +22,26 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * Wrapping class of {@link Connection} to pretend its closing
+ * @see Connection
+ * @author Elmax19
+ * @version 1.0
+ */
 public class ProxyConnection implements Connection {
+    /**
+     * variable of real connection
+     */
     private final Connection realConnection;
+    /**
+     * class logger for logging errors
+     */
     private static final Logger LOGGER = LogManager.getLogger(ProxyConnection.class);
 
+    /**
+     * class constructor - declare {@link ProxyConnection#realConnection}
+     * @param realConnection received connection
+     */
     public ProxyConnection(Connection realConnection) {
         this.realConnection = realConnection;
     }
@@ -75,6 +91,9 @@ public class ProxyConnection implements Connection {
         ConnectionPool.getInstance().returnConnection(this);
     }
 
+    /**
+     * real method to close connection
+     */
     void closeConnection() {
         try {
             realConnection.close();

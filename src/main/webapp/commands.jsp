@@ -8,34 +8,99 @@
 <fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>Commands</title>
+    <link href="styles/style.css" rel="stylesheet">
 </head>
 <body>
-<ul>
-    <c:choose>
-        <c:when test="${user.login==null}">
-            <li><a href=${pageContext.request.contextPath}/controller?command=login><fmt:message
-                    key="mainPage.toLogin"/></a></li>
-            <li><a href=${pageContext.request.contextPath}/controller?command=sign_up><fmt:message
-                    key="mainPage.toRegistration"/></a></li>
-        </c:when>
-        <c:otherwise>
-            <li><a href=${pageContext.request.contextPath}/controller?command=logout><fmt:message
-                    key="mainPage.toLogout"/></a></li>
-            <li><a href=${pageContext.request.contextPath}/controller?command=rating><fmt:message
-                    key="mainPage.toUsersRating"/></a></li>
-            <li><a href=${pageContext.request.contextPath}/controller?command=profile><fmt:message
-                    key="mainPage.toProfile"/></a></li>
-            <c:if test="${user.role!='user'}">
-                <li><a href=${pageContext.request.contextPath}/controller?command=users><fmt:message
-                        key="mainPage.toUsers"/></a></li>
-                <li><a href="${pageContext.request.contextPath}/controller?command=show_bicycles"><fmt:message
-                        key="mainPage.toBicycles"/></a></li>
-                <li><a href=${pageContext.request.contextPath}/controller?command=orders><fmt:message
-                        key="mainPage.toOrders"/></a></li>
-            </c:if>
-        </c:otherwise>
-    </c:choose>
-</ul>
+<header>
+    <div class="sect">
+        <div class="logo"><a href="${pageContext.request.contextPath}/controller?command=main">
+            <img src="img/logo.png" alt="Bicycle rent" height="80"/></a>
+        </div>
+        <div class="firstSect">
+            <c:choose>
+                <c:when test="${user.login==null}">
+                    <form action="${pageContext.request.contextPath}/controller?command=login" method="post">
+                        <input class="logging" type="submit" value="<fmt:message key="header.login"/>"/>
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    <form action="${pageContext.request.contextPath}/controller?command=logout" method="post">
+                        <input class="logging" type="submit" value="<fmt:message key="header.logout"/>">
+                    </form>
+                </c:otherwise>
+            </c:choose>
+            <div class="locale">
+                <div><b><fmt:message key="global.locale"/></b></div>
+                <div class="lang">
+                    <div><a href="${pageContext.request.contextPath}/controller?command=change_locale&locale=en">
+                        <fmt:message key="global.en"/></a></div>
+                    <div><a href="${pageContext.request.contextPath}/controller?command=change_locale&locale=ru">
+                        <fmt:message key="global.ru"/></a></div>
+                    <div><a href="${pageContext.request.contextPath}/controller?command=change_locale&locale=cn">
+                        <fmt:message key="global.cn"/></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<nav>
+    <c:if test="${user.login!=null}">
+
+        <c:choose>
+            <c:when test="${command=='rating'}">
+                <div class="selected"><b><fmt:message key="nav.rating"/></b></div>
+            </c:when>
+            <c:otherwise>
+                <div><b><a href=${pageContext.request.contextPath}/controller?command=rating><fmt:message
+                        key="nav.rating"/></a></b></div>
+            </c:otherwise>
+        </c:choose>
+
+        <c:choose>
+            <c:when test="${command=='profile'}">
+                <div class="selected"><b><fmt:message key="nav.profile"/></b></div>
+            </c:when>
+            <c:otherwise>
+                <div><b><a href=${pageContext.request.contextPath}/controller?command=profile><fmt:message
+                        key="nav.profile"/></a></b></div>
+            </c:otherwise>
+        </c:choose>
+
+        <c:if test="${user.role!='user'}">
+
+            <c:choose>
+                <c:when test="${command=='users'}">
+                    <div class="selected"><b><fmt:message key="nav.users"/></b></div>
+                </c:when>
+                <c:otherwise>
+                    <div><b><a href=${pageContext.request.contextPath}/controller?command=users><fmt:message
+                            key="nav.users"/></a></b></div>
+                </c:otherwise>
+            </c:choose>
+
+            <c:choose>
+                <c:when test="${command=='show_bicycles'}">
+                    <div class="selected"><b><fmt:message key="nav.bicycles"/></b></div>
+                </c:when>
+                <c:otherwise>
+                    <div><b><a href=${pageContext.request.contextPath}/controller?command=show_bicycles><fmt:message
+                            key="nav.bicycles"/></a></b>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
+            <c:choose>
+                <c:when test="${command=='orders'}">
+                    <div class="selected"><b><fmt:message key="nav.orders"/></b></div>
+                </c:when>
+                <c:otherwise>
+                    <div><b><a href=${pageContext.request.contextPath}/controller?command=orders><fmt:message
+                            key="nav.orders"/> </a></b></div>
+                </c:otherwise>
+            </c:choose>
+
+        </c:if>
+    </c:if>
+</nav>
 </body>
 </html>
